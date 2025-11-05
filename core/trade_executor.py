@@ -63,18 +63,18 @@ class TradeExecutor:
                 print("❌ Invalid position size")
                 return False
                 
-            # Create order request
+            # Di method execute_trade, ganti type_filling:
             request = {
                 "action": mt5.TRADE_ACTION_DEAL,
                 "symbol": symbol,
                 "volume": lot_size,
                 "type": order_type,
                 "price": price,
-                "deviation": 10,
+                "deviation": 50,
                 "magic": 2024,
                 "comment": f"AI Scalping {signal}",
                 "type_time": mt5.ORDER_TIME_GTC,
-                "type_filling": mt5.ORDER_FILLING_IOC,
+                "type_filling": mt5.ORDER_FILLING_FOK,  # ✅ CHANGE TO FOK
             }
             
             # Send order

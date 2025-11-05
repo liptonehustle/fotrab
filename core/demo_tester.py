@@ -63,15 +63,18 @@ class DemoTester:
         self._generate_report(trade_count, duration_hours)
         self.mt5.disconnect()
     
+    # Di dalam class DemoTester, update method _check_and_trade
     def _check_and_trade(self):
-        """Check market conditions and execute trades"""
+        """Check market conditions and execute trades with DATA-DRIVEN strategy"""
         from core.market_data import MarketData
-        from core.trading_strategy import TradingStrategy
+        from core.data_driven_strategy import DataDrivenStrategy  # ✅ UPDATE
         from core.trade_executor import TradeExecutor
         
         market_data = MarketData(self.mt5)
-        strategy = TradingStrategy(market_data)
+        strategy = DataDrivenStrategy(market_data)  # ✅ UPDATE
         executor = TradeExecutor(self.mt5)
+        
+    # ... rest of the code remains the same
         
         pairs = self.config.get_market_settings()['default_pairs']
         trades_executed = 0

@@ -1,2 +1,17 @@
+# Python
+__pycache__/
+*.pyc
 .env
+
+# Logs  
 logs/
+
+# Test files
+test_*
+manual_test_*
+debug_*
+check_*
+
+# IDE
+.vscode/
+.idea/

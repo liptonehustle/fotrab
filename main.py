@@ -3,7 +3,7 @@ import time
 from datetime import datetime
 from core.mt5_connector import MT5Connector
 from core.market_data import MarketData
-from core.trading_strategy import TradingStrategy
+from core.data_driven_strategy import DataDrivenStrategy  # ✅ UPDATE IMPORT
 from core.trade_executor import TradeExecutor
 from core.position_manager import PositionManager
 from core.demo_tester import DemoTester
@@ -11,15 +11,15 @@ from utils.logger import AdvancedLogger
 from utils.telegram_notifier import TelegramNotifier
 
 def main():
-    print("🚀 MT5 AI SCALPING SYSTEM")
+    print("🚀 MT5 AI SCALPING SYSTEM - DATA DRIVEN")
     print("=" * 50)
     
     # Show menu
-    print("1. Quick Market Analysis")
-    print("2. Demo Trading Test")
+    print("1. Quick Market Analysis (Data-Driven)")
+    print("2. Demo Trading Test") 
     print("3. Position Management")
     print("4. View Logs & Performance")
-    print("5. Run Live Trading")
+    print("5. Run Live Trading (Data-Driven)")
     print("6. Exit")
     
     choice = input("\nSelect option (1-6): ").strip()
@@ -42,19 +42,22 @@ def main():
         main()
 
 def quick_analysis():
-    """Quick market analysis without trading"""
+    """Quick market analysis with DATA-DRIVEN strategy"""
     print("\n" + "="*50)
-    print("QUICK MARKET ANALYSIS")
+    print("QUICK MARKET ANALYSIS - DATA DRIVEN")
     print("="*50)
     
     connector = MT5Connector()
     
     if connector.connect():
         market_data = MarketData(connector)
-        strategy = TradingStrategy(market_data)
+        strategy = DataDrivenStrategy(market_data)  # ✅ UPDATE STRATEGY
         logger = AdvancedLogger()
         
         pairs = connector.config.get_market_settings()['default_pairs']
+        
+        print("🎯 Using Data-Driven Strategy (optimized from 5771 historical signals)")
+        print("⏰ Trading Hours: 00:00, 05:00, 08:00, 22:00, 23:00 (based on signal patterns)")
         
         for pair in pairs:
             print(f"\n🎯 Analyzing {pair}...")
@@ -63,7 +66,7 @@ def quick_analysis():
             if signal != "NO_SIGNAL":
                 print(f"🚨 TRADING SIGNAL: {signal} {pair}")
             else:
-                print(f"➖ No signal for {pair}")
+                print(f"➖ No signal for {pair} (outside optimal hours or low confidence)")
         
         # Show performance summary
         performance = logger.get_performance_report()
@@ -80,13 +83,13 @@ def quick_analysis():
     main()
 
 def demo_testing():
-    """Run demo trading test"""
+    """Run demo trading test with DATA-DRIVEN strategy"""
     print("\n" + "="*50)
-    print("DEMO TRADING TEST")
+    print("DEMO TRADING TEST - DATA DRIVEN")
     print("="*50)
     
     print("1. Quick Test (5 minutes)")
-    print("2. Short Test (1 hour)")
+    print("2. Short Test (1 hour)") 
     print("3. Full Test (24 hours)")
     print("4. Back to Main Menu")
     
@@ -219,12 +222,14 @@ def view_logs():
     main()
 
 def live_trading():
-    """Live trading mode (USE WITH CAUTION)"""
+    """Live trading mode with DATA-DRIVEN strategy"""
     print("\n" + "="*50)
-    print("🚨 LIVE TRADING MODE")
+    print("🚨 LIVE TRADING MODE - DATA DRIVEN")
     print("="*50)
     print("⚠️  WARNING: This will execute real trades!")
     print("⚠️  Make sure you're using DEMO account!")
+    print("🎯 Using Data-Driven Strategy (optimized from 5771 signals)")
+    print("⏰ Active Hours: 00:00, 05:00, 08:00, 22:00, 23:00")
     print("="*50)
     
     confirm = input("Type 'YES' to confirm live trading: ").strip()
@@ -234,13 +239,13 @@ def live_trading():
         main()
         return
     
-    print("\n🔧 Starting Live Trading System...")
+    print("\n🔧 Starting Live Trading System with Data-Driven Strategy...")
     
     connector = MT5Connector()
     
     if connector.connect():
         market_data = MarketData(connector)
-        strategy = TradingStrategy(market_data)
+        strategy = DataDrivenStrategy(market_data)  # ✅ UPDATE STRATEGY
         executor = TradeExecutor(connector)
         manager = PositionManager(connector, executor)
         logger = AdvancedLogger()
@@ -259,17 +264,27 @@ def live_trading():
                 pairs=connector.config.get_market_settings()['default_pairs']
             )
         
-        print("✅ Live Trading Activated!")
+        print("✅ Live Trading Activated with Data-Driven Strategy!")
         print("💡 System will run until stopped (Ctrl+C)")
+        print("⏰ Trading only during optimal hours: 00:00, 05:00, 08:00, 22:00, 23:00")
         
         start_time = time.time()
         trade_count = 0
         
         try:
             while True:
-                current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-                print(f"\n⏰ {current_time}")
+                current_time = datetime.now()
+                current_hour = current_time.hour
+                
+                print(f"\n⏰ {current_time.strftime('%Y-%m-%d %H:%M:%S')}")
                 print("-" * 40)
+                
+                # Check if current hour is optimal for trading
+                optimal_hours = [0, 5, 8, 22, 23]
+                if current_hour not in optimal_hours:
+                    print(f"💤 Outside optimal trading hours ({current_hour:02d}:00). Sleeping...")
+                    time.sleep(300)  # Sleep 5 minutes
+                    continue
                 
                 # Manage existing positions
                 manager.manage_open_positions()
