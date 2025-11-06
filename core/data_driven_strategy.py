@@ -74,17 +74,29 @@ class DataDrivenStrategy:
             print(f"❌ Error analyzing {symbol}: {e}")
             return "NO_SIGNAL"
     
+    # def _is_optimal_trading_time(self):
+    #     """Trade only during proven high-signal hours (GMT+3)"""
+    #     from datetime import datetime
+    #     current_hour = datetime.now().hour
+        
+    #     print(f"🔧 Time Check: Current Server Hour (GMT+3) = {current_hour}")
+        
+    #     # ✅ OPTIMAL HOURS FOR OCTAFX SERVER (GMT+3)
+    #     # Original GMT: [0, 5, 8, 22, 23] 
+    #     # Convert to GMT+3: [3, 8, 11, 1, 2] (next day)
+    #     optimal_server_hours = [3, 8, 11, 1, 2]  # GMT+3
+        
+    #     # ✅ WIB EQUIVALENT: [6, 11, 14, 4, 5] WIB
+    #     optimal_wib_hours = [6, 11, 14, 4, 5]  # WIB
+        
+    #     print(f"🔧 Optimal Server Hours (GMT+3): {optimal_server_hours}")
+    #     print(f"🔧 Optimal WIB Hours: {optimal_wib_hours}")
+        
+    #     return current_hour in optimal_server_hours
+
     def _is_optimal_trading_time(self):
         """Trade only during proven high-signal hours"""
-        current_hour = datetime.now().hour
-        current_minute = datetime.now().minute
-        
-        # ✅ STRICT FILTERING: Only trade in best hours
-        if current_hour in self.optimized_params['avoid_hours']:
-            return False
-        if current_hour not in self.optimized_params['best_hours']:
-            return False
-            
+        # ✅ FOR TESTING - ALLOW ALL HOURS:
         return True
     
     def _data_driven_strategy(self, latest, prev, current_price, df):

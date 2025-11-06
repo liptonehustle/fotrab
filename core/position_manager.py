@@ -28,7 +28,7 @@ class PositionManager:
             print(f"❌ Error managing positions: {e}")
     
     def _check_position_management(self, position):
-        """Check individual position for TP/SL"""
+        """Check individual position for manual TP/SL if MT5 TP/SL fails"""
         symbol = position.symbol
         current_time = time.time()
         position_age = current_time - position.time
@@ -45,24 +45,24 @@ class PositionManager:
             current_price = tick.ask  
             profit = (position.price_open - current_price) * position.volume * 100000
         
-        profit_pips = profit / (position.volume * 10)  # Simplified pip calculation
+        profit_pips = profit / (position.volume * 10)
         
         print(f"  {symbol} {('BUY' if position.type == 0 else 'SELL')}: "
-              f"Profit: {profit_pips:.1f} pips, Age: {position_age/60:.1f} min")
+            f"Profit: {profit_pips:.1f} pips, Age: {position_age/60:.1f} min")
         
-        # TAKE PROFIT Logic (8-12 pips target for scalping)
+        # ✅ MANUAL TAKE PROFIT (if MT5 TP doesn't work)
         if profit_pips >= 9:  # 9 pips profit
-            print(f"🎯 Take Profit hit for {symbol} (+{profit_pips:.1f}pips)")
+            print(f"🎯 Manual Take Profit hit for {symbol} (+{profit_pips:.1f}pips)")
             self.executor.close_position(position.ticket)
             return
             
-        # STOP LOSS Logic (6 pips max loss)
+        # ✅ MANUAL STOP LOSS (if MT5 SL doesn't work)  
         if profit_pips <= -6:  # 6 pips loss
-            print(f"🛑 Stop Loss hit for {symbol} ({profit_pips:.1f}pips)")
+            print(f"🛑 Manual Stop Loss hit for {symbol} ({profit_pips:.1f}pips)")
             self.executor.close_position(position.ticket)
             return
             
-        # TIME-BASED CLOSE (max 30 minutes for scalping)
+        # ✅ TIME-BASED CLOSE (max 30 minutes for scalping)
         if position_age > 1800:  # 30 minutes
             print(f"⏰ Time-based close for {symbol} (30+ minutes)")
             self.executor.close_position(position.ticket)

@@ -112,27 +112,34 @@ class TelegramNotifier:
             print("✅ Error notification sent!")
         return success
     
-    def send_trade_notification(self, symbol, action, price, volume, ticket=None):
-        """Send trade execution notification"""
+    def send_trade_notification(self, symbol, action, price, volume, ticket=None, stop_loss=None, take_profit=None):
+        """Send trade execution notification with TP/SL"""
         emoji = "🟢" if action == "BUY" else "🔴"
         
+        # Format TP/SL info
+        tp_sl_info = ""
+        if stop_loss and take_profit:
+            sl_pips = abs(price - stop_loss) * 10000
+            tp_pips = abs(price - take_profit) * 10000
+            tp_sl_info = f"\n<b>Stop Loss:</b> {stop_loss:.5f} ({sl_pips:.1f}pips)"
+            tp_sl_info += f"\n<b>Take Profit:</b> {take_profit:.5f} ({tp_pips:.1f}pips)"
+        
         message = f"""
-{emoji} <b>TRADE EXECUTED</b> {emoji}
+    {emoji} <b>TRADE EXECUTED</b> {emoji}
 
-<b>Pair:</b> {symbol}
-<b>Action:</b> {action}
-<b>Price:</b> {price:.5f}
-<b>Volume:</b> {volume:.2f} lots
-<b>Ticket:</b> {ticket if ticket else 'N/A'}
-<b>Time:</b> {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+    <b>Pair:</b> {symbol}
+    <b>Action:</b> {action}
+    <b>Price:</b> {price:.5f}
+    <b>Volume:</b> {volume:.2f} lots
+    <b>Ticket:</b> {ticket if ticket else 'N/A'}{tp_sl_info}
 
-🤖 <i>AI Trading System</i>
-"""
+    <b>Time:</b> {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+
+    🤖 <i>AI Trading System</i>
+    """
         success = self.send_message(message)
         if success:
             print(f"✅ Telegram trade notification sent: {action} {symbol}")
-        else:
-            print(f"❌ Failed to send Telegram trade notification")
         return success
     
     def send_signal_notification(self, symbol, signal, price, indicators):

@@ -279,12 +279,12 @@ def live_trading():
                 print(f"\n⏰ {current_time.strftime('%Y-%m-%d %H:%M:%S')}")
                 print("-" * 40)
                 
-                # Check if current hour is optimal for trading
-                optimal_hours = [0, 5, 8, 22, 23]
-                if current_hour not in optimal_hours:
-                    print(f"💤 Outside optimal trading hours ({current_hour:02d}:00). Sleeping...")
-                    time.sleep(300)  # Sleep 5 minutes
-                    continue
+                    # Check if current hour is optimal for trading
+                    # optimal_hours = [0, 5, 8, 22, 23]
+                    # if current_hour not in optimal_hours:
+                    #     print(f"💤 Outside optimal trading hours ({current_hour:02d}:00). Sleeping...")
+                    #     time.sleep(300)  # Sleep 5 minutes
+                    #     continue
                 
                 # Manage existing positions
                 manager.manage_open_positions()
